@@ -1,9 +1,12 @@
 # Ignore all
-*
+/*
 
 # But accept
 !.gitignore
 !README.md
 !Procfile
 !requirements.txt
-
+!runtime.txt
+!script.py
+!templates
+!images
