@@ -4,3 +4,6 @@
 # But accept
 !.gitignore
 !README.md
+!Procfile
+!requirements.txt
+
