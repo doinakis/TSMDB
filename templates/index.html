@@ -1,23 +1,59 @@
 <!DOCTYPE html>
+
 <head>
-    <link rel="shortcut icon" type="image/png" href="images/favicon.png">
-    <link rel="stylesheet" href="styles.css">
-    <title>TSMDB-index</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TSMDB - Αρχική</title>
+  <link rel="shortcut icon" type="image/png" href="images/favicon.png">
+  <link rel="stylesheet" href="styles.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body>
-    <div class="header">
-        <a href="#default" class="logo">TSMDB</a>
-        <div class="header-right">
-          <a class="active" href="#home">Home</a>
-          <a href="#contact">Products</a>
-          <a href="#about">Clients</a>
-        </div>
-      </div>
-      <div style="padding-left:20px">
-        <h1>Responsive Header</h1>
-        <p>Resize the browser window to see the effect.</p>
-        <p>Some content..</p>
-      </div>
+  <div class="header">
+    <a href="#default" class="logo">TSMDB</a>
+    <div class="header-right">
+      <a class="active" href="index.html">Αρχική</a>
+      <a href="stores.html">Καταστήματα</a>
+      <a href="products.html">Προϊόντα</a>
+      <a href="clients.html">Πελάτες</a>
+      <a href="login.html">Αποσύνδεση</a>
+    </div>
+  </div>
+
+  <div class="column">
+    <div class="row">
+      <h2>Πληροφορίες Καταστήματος</h2>
+      <table>
+        {%for (key,value) in info.items()%}
+        <tr>
+          <th>{{ key }}</th>
+          <td>{{ value }}</td>
+        </tr>
+        {%endfor%}
+      </table>
+    </div>
+    <div class="row">
+      <h2>Αναμενόμενες αφίξεις προϊόντων</h2>
+      <table>
+        {%for (key,value) in info.items()%}
+        <tr>
+          <th>{{ key }}</th>
+          <td>{{ value }}</td>
+        </tr>
+        {%endfor%}
+        </table>
+    </div>
+    <div class="row">
+      <h2>Αναχωρίσεις προϊόντων</h2>
+      <table>
+        {%for (key,value) in info.items()%}
+        <tr>
+          <th>{{ key }}</th>
+          <td>{{ value }}</td>
+        </tr>
+        {%endfor%}
+        </table>
+    </div>
+  </div>
+
+
 </body>

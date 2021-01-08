@@ -1,29 +1,99 @@
 <!DOCTYPE html>
+
 <head>
     <title>TSMDB - Login</title>
     <link rel="shortcut icon" type="image/png" href="images/favicon.png">
     <link rel="stylesheet" href="styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        #form1 {
-            margin: 100px;
-        }
         .center {
+            background-color: white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             text-align: center;
+            border: 5px solid #1e81ce;
+            border-radius: 4px;
+            z-index: 2;
+            width: 500px;
+            padding: 20px;
+        }
+
+        .bg-image {
+            /* The image used */
+            background-image: url("images/logo.png");
+            opacity: 0.3;
+
+            /* Full height */
+            height: 100%;
+
+            /* Center and scale the image nicely */
+            background-repeat: round;
+            background-size: contain;
+        }
+
+        #form1 {
+            margin: 30px;
+        }
+
+        input[type=text],
+        select {
+            width: 400px;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 20px;
+        }
+
+        input[type=password],
+        select {
+            width: 400px;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 20px;
+        }
+
+        input[type=submit] {
+            width: 400px;
+            background-color: #3d9ae2;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 25px;
+        }
+
+        label {
+            font-size: 25px;
+            color: #898890;
         }
     </style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body>
+    <div class="bg-image"></div>
+
     <div class="center">
-        <a href=""><img src="images/logo.png" alt="LOGO" style="width:250px;height:250px;"></a>
+        <h1>Καλώς ορίσατε στην TSMDB,</h1>
+        <h2>την υπηρεσία εύκολης διαχείρισης.</h2>
         <form id="form1" action="/login" method="post">
-                <label for="username" >Username</label><br>
-                <input type="text" id="username" name="username"><br><br>
-                <label for="password">Password</label><br>
-                <input type="password" id="password" name="password"><br><br>
-                <input type="submit" value="Login">
+            <label for="username">Όνομα Χρήστη</label><br>
+            <input type="text" id="username" name="username"><br><br>
+            <label for="password">Κωδικός</label><br>
+            <input type="password" id="password" name="password"><br><br>
+            <p style="color: #ff5023">{{ error }}</p>
+            <input type="submit" value="Login">
         </form>
     </div>
 </body>
-
