@@ -1,5 +1,6 @@
 # Ignore all
 /*
+**/__pycache__
 
 # But accept
 !.gitignore
@@ -10,3 +11,4 @@
 !script.py
 !templates
 !images
+!scripts
