@@ -72,6 +72,14 @@ class Database:
         with self.con.cursor() as cursor:
             cursor.execute(statement, values)
             return cursor.fetchall()
+    
+    def commit(self):
+        """Commits the changes to the database"""
+        self.con.commit()
+        
+    def rollback(self):
+        """Rollbacks any changes"""
+        self.con.rollback()
 
     def createObject(self, name, cols="*"):
         """
@@ -183,7 +191,6 @@ class SQLObject:
         statement = f"""INSERT INTO {self.table} {strcols} VALUES {prevalues}"""
 
         self.db.statement(statement, vals)
-        self.db.con.commit()
 
     def join(self, other, on=None):
         """
