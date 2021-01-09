@@ -183,6 +183,7 @@ class SQLObject:
         statement = f"""INSERT INTO {self.table} {strcols} VALUES {prevalues}"""
 
         self.db.statement(statement, vals)
+        self.db.con.commit()
 
     def join(self, other, on=None):
         """
