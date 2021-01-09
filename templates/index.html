@@ -1,59 +1,133 @@
 <!DOCTYPE html>
 
 <head>
-  <title>TSMDB - Αρχική</title>
-  <link rel="shortcut icon" type="image/png" href="images/favicon.png">
-  <link rel="stylesheet" href="styles.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TSMDB - Αρχική</title>
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
+    <link rel="stylesheet" href="/styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .column {
+            width: 47%;
+        }
+
+        #info {
+            margin-bottom: 30px;
+        }
+    </style>
 </head>
 
 <body>
-  <div class="header">
-    <a href="#default" class="logo">TSMDB</a>
-    <div class="header-right">
-      <a class="active" href="index.html">Αρχική</a>
-      <a href="stores.html">Καταστήματα</a>
-      <a href="products.html">Προϊόντα</a>
-      <a href="clients.html">Πελάτες</a>
-      <a href="login.html">Αποσύνδεση</a>
+    <div class="header">
+        <a href="/" class="logo">TSMDB</a>
+        <div class="header-right">
+            <a class="active" href="/">Αρχική</a>
+            <a href="/stores">Καταστήματα</a>
+            <a href="/stock">Προϊόντα</a>
+            <a href="/clients">Πελάτες</a>
+            <a href="/">Αποσύνδεση</a>
+        </div>
     </div>
-  </div>
 
-  <div class="column">
-    <div class="row">
-      <h2>Πληροφορίες Καταστήματος</h2>
-      <table>
-        {%for (key,value) in info.items()%}
-        <tr>
-          <th>{{ key }}</th>
-          <td>{{ value }}</td>
-        </tr>
-        {%endfor%}
-      </table>
+    <div class="column">
+        <div class="row">
+            <h2 id="date"></h2>
+
+            <script>
+                const monthNames = ["Ιανουαρίου", "Φεβρουαρίου", "Μάρτίου", "Απριλίου", "Μαΐου", "Ιουνίου",
+                    "Ιουλίου", "Αυγούστου", "Σεπτεμβρίου", "Οκτωβρίου", "Νοεμβρίου", "Δεκεμβρίου"
+                ];
+                const dayNames = ["Κυριακή", "Δευτέρα", "Τρίτη", "Τετάρτη", "Πέμπτη", "Παρασκευή", "Σάββατο"]
+                var d = new Date();
+                document.getElementById("date").innerHTML = dayNames[d.getDay()] + ", " +
+                    d.getDate() + " " + monthNames[d.getMonth()] + " " + d.getFullYear();
+            </script>
+        </div>
+
+        <div class="row">
+            <h2>Πληροφορίες Καταστήματος</h2>
+            <table id="info">
+                {%for (key,value) in store_info.items()%}
+                <tr>
+                    <th>{{ key }}</th>
+                    <td>{{ value }}</td>
+                </tr>
+                {%endfor%}
+            </table>
+        </div>
+
+        <div class="row">
+            <h2>Άδειες Εργαζομένων</h2>
+            <div class="scroll_table">
+                <table>
+                    <tr>
+                        <th>Όνομα</th>
+                        <th>Επώνυμο</th>
+                        <th>Τηλέφωνο</th>
+                        <th>Τύπος άδειας</th>
+                        <th>Διάκεια</th>
+                        <th>Άδεια από</th>
+                    </tr>
+                    {% for (first_name, last_name, phone, type, duration, date) in store_day_off %}
+                    <tr>
+                        <td>{{ first_name }}</td>
+                        <td>{{ last_name }}</td>
+                        <td>{{ phone }}</td>
+                        <td>{{ type }}</td>
+                        <td>{{ duration }}</td>
+                        <td>{{ date }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+
     </div>
-    <div class="row">
-      <h2>Αναμενόμενες αφίξεις προϊόντων</h2>
-      <table>
-        {%for (key,value) in info.items()%}
-        <tr>
-          <th>{{ key }}</th>
-          <td>{{ value }}</td>
-        </tr>
-        {%endfor%}
-        </table>
+
+    <div class="column">
+        <div class="row">
+            <h2>Αναμενόμενες αφίξεις προϊόντων</h2>
+            <div class="scroll_table">
+                <table>
+                    <tr>
+                        <th>Από</th>
+                        <th>Ημερομηνία Αποστολής</th>
+                        <th>Πληροφορίες</th>
+                        <th>Κατάσταση</th>
+                    </tr>
+                    {% for (destination, origin_number, date, information, status) in transfer_to %}
+                    <tr>
+                        <td>{{ destination }} {{ origin_number }}</td>
+                        <td>{{ date }}</td>
+                        <td>{{ information }}</td>
+                        <td>{{ status }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+
+        <div class="row">
+            <h2>Αναχωρίσεις προϊόντων</h2>
+            <div class="scroll_table">
+                <table>
+                    <tr>
+                        <th>Προς</th>
+                        <th>Ημερομηνία Αποστολής</th>
+                        <th>Πληροφορίες</th>
+                        <th>Κατάσταση</th>
+                    </tr>
+                    {% for (destination, dest_number, date, information, status) in transfer_from %}
+                    <tr>
+                        <td>{{ destination }} {{ dest_number }}</td>
+                        <td>{{ date }}</td>
+                        <td>{{ information }}</td>
+                        <td>{{ status }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
     </div>
-    <div class="row">
-      <h2>Αναχωρίσεις προϊόντων</h2>
-      <table>
-        {%for (key,value) in info.items()%}
-        <tr>
-          <th>{{ key }}</th>
-          <td>{{ value }}</td>
-        </tr>
-        {%endfor%}
-        </table>
-    </div>
-  </div>
 
 
 </body>

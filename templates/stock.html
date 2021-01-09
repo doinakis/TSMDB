@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+
+<head>
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
+    <link rel="stylesheet" href="/styles.css">
+    <title>TSMDB-index</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .column {
+            width: 97%;
+        }
+
+        input[type=text] {
+            width: 500px;
+            padding: 5px 10px;
+            margin-bottom: 30px;
+            font-size: 15px;
+        }
+
+        input[type=submit] {
+            width: auto;
+            background-color: #3d9ae2;
+            color: white;
+            padding: 5px 10px;
+            margin-bottom: 30px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        input[type=submit]:hover {
+            background-color: #ff9811;
+        }
+
+        #clear-btn {
+            width: auto;
+            background-color: #ff5023;
+            color: white;
+            padding: 5px 10px;
+            margin-bottom: 30px;
+            margin-right: 50px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #clear-btn:hover {
+            background-color: #ff9811;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <a href="/" class="logo">TSMDB</a>
+        <div class="header-right">
+            <a href="/">Αρχική</a>
+            <a href="/stores">Καταστήματα</a>
+            <a class="active" href="/stock">Προϊόντα</a>
+            <a href="/clients">Πελάτες</a>
+            <a href="/">Αποσύνδεση</a>
+        </div>
+    </div>
+
+    <div class="column">
+        <div class="row">
+            <h2>Πληροφορίες Προϊόντων</h2>
+
+            <input type="text" id="search" onkeyup="filterFunction()"
+                placeholder="Αναζήτηση ονόματος/κατασκευαστή προϊόντων">
+
+            <form action="stock/move" method="POST">
+                <div class="scroll_table">
+                    <table id="product_table">
+                        <tr>
+                            <th>Επιλογή</th>
+                            <th>Όνομα</th>
+                            <th>Κατηγορία</th>
+                            <th>Τιμή</th>
+                            <th>Κατασκευαστής</th>
+                            <th>Περιγραφή</th>
+                            <th>Ποσότητα</th>
+                        </tr>
+                        {% for (id, name, category, price, manufacturer, description, amount) in info %}
+                        <tr>
+                            <td><input type="checkbox" id="{{ id }}" name="{{ id }}" onclick="on_change()"></td>
+                            <td>{{ name }}</td>
+                            <td>{{ category }}</td>
+                            <td>{{ price }}</td>
+                            <td>{{ manufacturer }}</td>
+                            <td>{{ description }}</td>
+                            <td>{{ amount }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+
+                <button id="clear-btn" type="button" onclick="uncheck()">Καθαρισμός όλων</button>
+                <input type="submit" value="Αίτηση μεταφοράς">
+            </form>
+
+        </div>
+    </div>
+
+    <script>
+        function filterFunction() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("search");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("product_table");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td1 = tr[i].getElementsByTagName("td")[1];
+                td4 = tr[i].getElementsByTagName("td")[4];
+                if (td1 || td4) {
+                    txtValue1 = td1.textContent || td1.innerText;
+                    txtValue4 = td4.textContent || td4.innerText;
+                    if (txtValue1.toUpperCase().indexOf(filter) > -1 || txtValue4.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        /* Check if all checkboxes are unchecked and disable submit button */
+        function on_change() {
+            var chk_boxes = document.querySelectorAll("input[type=checkbox]");
+            var btn = document.querySelectorAll("input[type=submit]")[0];
+            btn.disabled = true;
+            for (var i = 0; i < chk_boxes.length; i++) {
+                if (chk_boxes[i].checked) {
+                    btn.disabled = false;
+                    break;
+                }
+            }
+        }
+
+        function uncheck() {
+            var elements = document.getElementsByTagName("input");
+            for (var ii = 0; ii < elements.length; ii++) {
+                if (elements[ii].type == "checkbox") {
+                    elements[ii].checked = false;
+                }
+            }
+        }
+    </script>
+
+</body>

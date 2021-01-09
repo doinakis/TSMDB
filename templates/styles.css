@@ -8,12 +8,37 @@ html {
 }
 
 table {
-    border-spacing: 15px;
+    width: 100%;
+    border-collapse: collapse;
 }
 
 th {
     text-align: left;
 }
+
+td {
+    overflow-wrap: break-word;
+    text-align: center;
+}
+
+tr:nth-child(even) {
+    background-color: rgba(61, 154, 226, 0.5);
+}
+
+tr:nth-child(odd) {
+    background-color: rgba(198, 197, 202, 0.5);
+}
+
+.scroll_table {
+    display: block;
+    overflow: auto;
+    margin-bottom: 30px;
+}
+
+.scroll_table th {
+    text-align: center;
+    background-color: #ff9811;
+  }
 
 * {
     box-sizing: border-box;
@@ -21,7 +46,7 @@ th {
 
 .header {
     overflow: hidden;
-    background-color: #f1f1f1;
+    background-color: #c6c5ca;
     padding: 20px 10px;
     border-radius: 4px;
     position: sticky;
@@ -73,18 +98,25 @@ th {
 
 /* Grid View */
 /* Create two equal columns that floats next to each other */
-.row {
+.column {
     float: left;
+    width: auto;
     height: auto;
-    width: 500px;
-    padding: 10px;
+    margin: 15px;
+}
+
+.row {
+    padding: 0px 30px;
     border-radius: 4px;
     border: 2px solid #1e81ce;
-    margin: 20px;
+    margin-top: 20px;
+    height: auto;
+    width: 100%;
+    text-align: center;
 }
 
 /* Clear floats after the columns */
-.column:after {
+.row:after {
     content: "";
     display: table;
     clear: both;

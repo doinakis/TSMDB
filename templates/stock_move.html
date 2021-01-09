@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+
+<head>
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
+    <link rel="stylesheet" href="/styles.css">
+    <title>TSMDB-index</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .column {
+            width: 97%;
+        }
+
+        input[type=text] {
+            width: 60px;
+            font-size: 15px;
+            text-align: center;
+        }
+
+        input[type=submit] {
+            float: right;
+            width: auto;
+            background-color: #3d9ae2;
+            color: white;
+            padding: 5px 10px;
+            margin-bottom: 30px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type=submit]:hover {
+            background-color: #ff9811;
+        }
+
+        #clear-btn {
+            width: auto;
+            background-color: #ff5023;
+            color: white;
+            padding: 5px 10px;
+            margin-bottom: 30px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #clear-btn:hover {
+            background-color: #ff9811;
+        }
+
+        #back-btn {
+            float: left;
+            width: auto;
+            background-color: #ff5023;
+            color: white;
+            padding: 5px 10px;
+            margin-bottom: 30px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #back-btn {
+            background-color: #ff9811;
+        }
+
+        #description {
+            height: 100px;
+            width: 600px;
+            margin: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <a href="/" class="logo">TSMDB</a>
+        <div class="header-right">
+            <a href="/">Αρχική</a>
+            <a href="/stores">Καταστήματα</a>
+            <a class="active" href="/stock">Προϊόντα</a>
+            <a href="/clients">Πελάτες</a>
+            <a href="/">Αποσύνδεση</a>
+        </div>
+    </div>
+
+    <div class="column">
+        <form action="/stock/move/complete" method="POST">
+
+            <div class="row">
+                <h2>Βρέθηκαν {{ info |length }} καταστήματα με τα ζητούμενα προϊόντα:</h2>
+                <h3>Παρακαλώ επιλέξτε την ποσότητα κάθε προϊόντος από το αντίστοιχο κατάστημα που επιθυμείτε να γίνει η
+                    μεταφορά</h3>
+                <a href="/stock" id="back-btn">Πίσω</a>
+                <button id="clear-btn" type="button" onclick="clear_text()">Καθαρισμός όλων</button>
+                <input type="submit" value="Αίτηση μεταφοράς">
+                <br>
+                <input type="text" id="description" name="description"
+                    placeholder="Προσθήκη σχολίου για την μεταφορά (προαιρετικό)">
+            </div>
+
+            {% for (store_id, stores_info) in info.items() %}
+            <div class="row">
+                <h2>Κατάστημα: {{ stores_info['store_info'][0] }} {{ stores_info['store_info'][1] }}</h2>
+                <div class="scroll_table">
+                    <table id="product_table">
+                        <tr>
+                            <th>Όνομα</th>
+                            <th>Κατηγορία</th>
+                            <th>Κατασκευαστής</th>
+                            <th>Διαθέσιμη Ποσότητα</th>
+                            <th>Επιθυμητή Ποσότητα</th>
+                        </tr>
+                        {% for (id, name, category, manufacturer, amount) in stores_info['products'] %}
+                        <tr>
+                            <td>{{ name }}</td>
+                            <td>{{ category }}</td>
+                            <td>{{ manufacturer }}</td>
+                            <td>{{ amount }}</td>
+                            <td><input type="text" id="{{ store_id }}_{{ id }}" name="{{ store_id }}_{{ id }}"
+                                    onkeydown="return (event.keyCode!=13)">
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+            {% endfor %}
+
+        </form>
+    </div>
+
+    <script>
+        function clear_text() {
+            var elements = document.getElementsByTagName("input");
+            for (var ii = 0; ii < elements.length; ii++) {
+                if (elements[ii].type == "text") {
+                    elements[ii].value = "";
+                }
+            }
+        }
+    </script>
+
+</body>
