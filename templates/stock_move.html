@@ -2,7 +2,7 @@
 
 <head>
     <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="styles.css">
     <title>TSMDB-index</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -26,6 +26,7 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            font-size: 20px;
         }
 
         input[type=submit]:hover {
@@ -38,9 +39,11 @@
             color: white;
             padding: 5px 10px;
             margin-bottom: 30px;
+            margin-left: 50px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            font-size: 20px;
         }
 
         #clear-btn:hover {
@@ -57,16 +60,20 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            font-size: 20px;
+            text-decoration: none;
         }
 
-        #back-btn {
+        #back-btn:hover {
             background-color: #ff9811;
         }
 
         #description {
-            height: 100px;
-            width: 600px;
+            width: 95%;
+            height: 30px;
             margin: 30px;
+            vertical-align: middle;
+            text-align: left;
         }
     </style>
 </head>
@@ -90,12 +97,12 @@
                 <h2>Βρέθηκαν {{ info |length }} καταστήματα με τα ζητούμενα προϊόντα:</h2>
                 <h3>Παρακαλώ επιλέξτε την ποσότητα κάθε προϊόντος από το αντίστοιχο κατάστημα που επιθυμείτε να γίνει η
                     μεταφορά</h3>
+                <input type="text" id="description" name="description"
+                    placeholder="Προσθήκη σχολίου για την μεταφορά (προαιρετικό)">
+                <br>
                 <a href="/stock" id="back-btn">Πίσω</a>
                 <button id="clear-btn" type="button" onclick="clear_text()">Καθαρισμός όλων</button>
                 <input type="submit" value="Αίτηση μεταφοράς">
-                <br>
-                <input type="text" id="description" name="description"
-                    placeholder="Προσθήκη σχολίου για την μεταφορά (προαιρετικό)">
             </div>
 
             {% for (store_id, stores_info) in info.items() %}
