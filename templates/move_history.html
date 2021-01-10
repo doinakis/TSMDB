@@ -5,6 +5,11 @@
     <link rel="stylesheet" href="styles.css">
     <title>TSMDB-index</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .column {
+            width: 47%;
+        }
+    </style>
 </head>
 
 <body>
@@ -19,6 +24,56 @@
             <a href="/purchase_history">Ιστορικό αγορών</a>
             <a class="active" href="/move_history">Μεταφορές</a>
             <a href="/">Αποσύνδεση</a>
+        </div>
+    </div>
+
+    <div class="column">
+        <div class="row">
+            <h2>Αναλυτικές αφίξεις προϊόντων</h2>
+
+            <div class="scroll_table">
+                <table>
+                    <tr>
+                        <th>Από</th>
+                        <th>Ημερομηνία Αποστολής</th>
+                        <th>Πληροφορίες</th>
+                        <th>Κατάσταση</th>
+                    </tr>
+                    {% for (origin, origin_number, date, information, status) in transfer_from %}
+                    <tr>
+                        <td>{{ origin }} {{ origin_number }}</td>
+                        <td>{{ date }}</td>
+                        <td>{{ information }}</td>
+                        <td>{{ status }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="column">
+        <div class="row">
+            <h2>Αναλυτικές αναχωρίσεις προϊόντων</h2>
+
+            <div class="scroll_table">
+                <table>
+                    <tr>
+                        <th>Προς</th>
+                        <th>Ημερομηνία Αποστολής</th>
+                        <th>Πληροφορίες</th>
+                        <th>Κατάσταση</th>
+                    </tr>
+                    {% for (destination, dest_number, date, information, status) in transfer_to %}
+                    <tr>
+                        <td>{{ destination }} {{ dest_number }}</td>
+                        <td>{{ date }}</td>
+                        <td>{{ information }}</td>
+                        <td>{{ status }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
         </div>
     </div>
 

@@ -51,14 +51,10 @@ def get_index():
     move_to             = db.createObject(name="move_to")
     move_to_stores      = move_to.join(store,"move_to.destination=store.id")
     transfer_to         = move_to_stores.query(cols    = ("street_name", "street_number", "date", "info","status"),
-                                        condition = f"WHERE move_to.origin={current_store_id} AND (status = 'Accepted' or status = 'Pending')")
+                                        condition = f"WHERE move_to.origin={current_store_id} AND (status = 'Accepted' or status = 'Pending') ORDER BY date DESC")
     move_from_stores    = move_to.join(store,"move_to.origin=store.id")
     transfer_from       = move_from_stores.query(cols  = ("street_name", "street_number", "date", "info","status"),
-                                        condition = f"WHERE move_to.destination={current_store_id} AND (status = 'Accepted' or status = 'Pending')")
-    transfer_from = list(transfer_from)
-    transfer_from.sort(key=lambda x: x[2], reverse= True)
-    transfer_to = list(transfer_to)
-    transfer_to.sort(key=lambda x: x[2], reverse= True)
+                                        condition = f"WHERE move_to.destination={current_store_id} AND (status = 'Accepted' or status = 'Pending') ORDER BY date DESC")
     day_off          = db.createObject(name="`day-off`")
     employee         = db.createObject(name="employee")
     employee_day_off = day_off.join(employee,"`day-off`.employee_id=employee.tin")
@@ -262,8 +258,16 @@ def get_history_id(id):
 
 @app.route('/move_history', methods=[ 'GET' ])
 def get_move():
-
-    return render_template('move_history.html')
+    current_store_id = 5
+    store = db.createObject("store")
+    move_to             = db.createObject(name="move_to")
+    move_to_stores      = move_to.join(store,"move_to.destination=store.id")
+    transfer_to         = move_to_stores.query(cols    = ("street_name", "street_number", "date", "info","status"),
+                                        condition = f"WHERE move_to.origin={current_store_id} ORDER BY date DESC")
+    move_from_stores    = move_to.join(store,"move_to.origin=store.id")
+    transfer_from       = move_from_stores.query(cols  = ("street_name", "street_number", "date", "info","status"),
+                                        condition = f"WHERE move_to.destination={current_store_id} ORDER BY date DESC")
+    return render_template('move_history.html', transfer_to=transfer_to, transfer_from=transfer_from)
 
 # SECTION: Main
 if __name__ == '__main__':
