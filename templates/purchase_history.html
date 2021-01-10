@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+
+<head>
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
+    <link rel="stylesheet" href="/styles.css">
+    <title>TSMDB-index</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .column {
+            width: 97%;
+        }
+
+        #more-btn {
+            width: auto;
+            background-color: #3d9ae2;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 15px;
+            text-decoration: none;
+        }
+
+        #more-btn:hover {
+            background-color: #ff9811;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <a href="/" class="logo">
+            <img src="/images/logo.png" alt="logo" style="height:25px;width:25px;">
+            TSMDB
+        </a>
+        <div class="header-right">
+            <a href="/">Αρχική</a>
+            <a href="/stock">Προϊόντα</a>
+            <a class="active" href="/purchase_history">Ιστορικό αγορών</a>
+            <a href="/move_history">Μεταφορές</a>
+            <a href="/">Αποσύνδεση</a>
+        </div>
+    </div>
+
+    <div class="column">
+        <div class="row">
+            <h2>Ιστορικό αγορών</h2>
+
+            <div class="scroll_table">
+                <table id="product_table">
+                    <tr>
+                        <th>Ημερομηνία</th>
+                        <th>Όνομα Υπαλλήλου</th>
+                        <th>Όνομα Πελάτη</th>
+                        <th>Αριθμός προϊόντων</th>
+                        <th>Πληρωτέο ποσό</th>
+                        <th>Βαθμολογία</th>
+                        <th>Περισσότερες πληροφορίες</th>
+                    </tr>
+                    {% for (id, date, employee_first, employee_last, client_first, client_last, num_products, paid_amount, rating) in info %}
+                    <tr>
+                        <td>{{ date }}</td>
+                        <td>{{ employee_first }} {{ employee_last }}</td>
+                        <td>{{ client_first }} {{ client_last }}</td>
+                        <td>{{ num_products }}</td>
+                        <td>{{ paid_amount }}</td>
+                        <td>{{ rating }}</td>
+                        <td><a href="/purchase_history/{{ id }}" id="more-btn">⮞   ⮞   ⮞</a></td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+
+        </div>
+    </div>
+    
+</body>

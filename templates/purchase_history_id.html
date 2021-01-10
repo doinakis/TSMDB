@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+
+<head>
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
+    <link rel="stylesheet" href="/styles.css">
+    <title>TSMDB-index</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .column {
+            width: 97%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <a href="/" class="logo">
+            <img src="/images/logo.png" alt="logo" style="height:25px;width:25px;">
+            TSMDB
+        </a>
+        <div class="header-right">
+            <a href="/">Αρχική</a>
+            <a href="/stock">Προϊόντα</a>
+            <a class="active" href="/purchase_history">Ιστορικό αγορών</a>
+            <a href="/move_history">Μεταφορές</a>
+            <a href="/">Αποσύνδεση</a>
+        </div>
+    </div>
+
+    <div class="column">
+        <div class="row">
+            <h2>Αγορά που πραγματοποιήθηκε στις {{ date }}</h2>
+            <h3>Από πελάτη: {{ client }} (τηλ. {{ client_phone_number }})</h3>
+            <h3>Και εργαζόμενο: {{ employee }}</h3>
+            <br>
+            <h3>Ανάλυση αγοράς:</h3>
+
+            <div class="scroll_table">
+                <table id="product_table">
+                    <tr>
+                        <th>Όνομα προϊόντος</th>
+                        <th>Κατηγορία</th>
+                        <th>Τιμή</th>
+                        <th>Κατασκευαστής</th>
+                        <th>Περιγραφή</th>
+                        <th>Κόστος</th>
+                        <th>Ποσότητα</th>
+                    </tr>
+                    {% for (name, category, price, manufacturer, description, cost, temp, amount) in info %}
+                    <tr>
+                        <td>{{ name }}</td>
+                        <td>{{ category }}</td>
+                        <td>{{ price }}</td>
+                        <td>{{ manufacturer }}</td>
+                        <td>{{ description }}</td>
+                        <td>{{ cost }}</td>
+                        <td>{{ amount }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+
+        </div>
+    </div>
+    
+</body>
