@@ -192,7 +192,7 @@ class SQLObject:
 
         self.db.statement(statement, vals)
 
-    def join(self, other, on=None):
+    def join(self, other, on=None, type="INNER"):
         """
         Creates a JOIN table to execute queries on
 
@@ -200,7 +200,7 @@ class SQLObject:
             other - The other SQLObject to join on
             on    - The on-expression
         """
-        table = f"{self.table} JOIN {other.table}" + ( f" ON {on}" if on else "" )
+        table = f"{self.table} {type} JOIN {other.table}" + ( f" ON {on}" if on else "" )
 
         if self.cols == "*":
             cols = other.cols
