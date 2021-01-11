@@ -20,7 +20,7 @@ class Database:
         self.password = password
         self.db       = db
         self.kwargs   = kwargs
-        self.is_open  = False
+        self.con      = None
 
     def open(self):
         """
@@ -29,20 +29,19 @@ class Database:
         Raises:
             RuntimeError - If already open
         """
-        if self.is_open:
+        if self.con is not None:
             raise RuntimeError("Database already open")
         self.con  = _MySQL.connect( host=self.host,
                                     user=self.user,
                                     passwd=self.password,
                                     db=self.db,
                                     **self.kwargs)
-        self.is_open = True
 
     def close(self):
         """Closes the connection to the database"""
-        if self.is_open:
+        if self.con is None:
             self.con.close()
-            self.is_open = False
+            self.con = None
 
     def __enter__(self):
         """
