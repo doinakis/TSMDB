@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 
 <head>
-    <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.png" />
+    <link rel="stylesheet" href="/styles.css" />
     <title>TSMDB-index</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
         .column {
-            width: 97%;
+        width: 97%;
+        }
+        .sub {
+        font-weight: bold;
         }
     </style>
 </head>
@@ -15,8 +18,12 @@
 <body>
     <div class="header">
         <a href="/" class="logo">
-            <img src="/images/logo.png" alt="logo" style="height:25px;width:25px;">
-            TSMDB
+        <img
+            src="/images/logo.png"
+            alt="logo"
+            style="height: 25px; width: 25px"
+        />
+        TSMDB
         </a>
         <div class="header-right">
             <a href="/">Αρχική</a>
@@ -29,38 +36,65 @@
 
     <div class="column">
         <div class="row">
-            <h2>Αγορά που πραγματοποιήθηκε στις {{ date }}</h2>
-            <h3>Από πελάτη: {{ client }} (τηλ. {{ client_phone_number }})</h3>
-            <h3>Και εργαζόμενο: {{ employee }}</h3>
-            <br>
-            <h3>Ανάλυση αγοράς:</h3>
+        <h2>Αγορά που πραγματοποιήθηκε στις {{ date }}</h2>
+        <h3>Από πελάτη: {{ client }} (τηλ. {{ client_phone_number }})</h3>
+        <h3>Και εργαζόμενο: {{ employee }}</h3>
+        <br />
+        <h3>Ανάλυση αγοράς:</h3>
 
-            <div class="scroll_table">
-                <table id="product_table">
-                    <tr>
-                        <th>Όνομα προϊόντος</th>
-                        <th>Κατηγορία</th>
-                        <th>Τιμή</th>
-                        <th>Κατασκευαστής</th>
-                        <th>Περιγραφή</th>
-                        <th>Κόστος</th>
-                        <th>Ποσότητα</th>
-                    </tr>
-                    {% for (name, category, price, manufacturer, description, cost, temp, amount) in info %}
-                    <tr>
-                        <td>{{ name }}</td>
-                        <td>{{ category }}</td>
-                        <td>{{ price }}</td>
-                        <td>{{ manufacturer }}</td>
-                        <td>{{ description }}</td>
-                        <td>{{ cost }}</td>
-                        <td>{{ amount }}</td>
-                    </tr>
-                    {% endfor %}
-                </table>
-            </div>
+        <div class="scroll_table">
+            <table id="product_table">
+            <tr>
+                <th>Όνομα προϊόντος</th>
+                <th>Κατηγορία</th>
+                <th>Κατασκευαστής</th>
+                <th>Περιγραφή</th>
+                <th>Κόστος</th>
+                <th>Τιμή</th>
+                <th>Ποσότητα</th>
+                <th>Μερικό σύνολο</th>
+            </tr>
+            {% for (name, category, price, manufacturer, description, cost, temp,
+            amount, sub_total) in info %}
+            <tr>
+                <td>{{ name }}</td>
+                <td>{{ category }}</td>
+                <td>{{ manufacturer }}</td>
+                <td>{{ description }}</td>
+                <td>{{ cost }} &euro;</td>
+                <td>{{ price }} &euro;</td>
+                <td>{{ amount }}</td>
+                <td class="sub">{{ sub_total }} &euro;</td>
+            </tr>
+            {% endfor %}
 
+            <tr
+                style="background-color: #1e81ce; color: white; font-weight: bold"
+            >
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Σύνολο:</td>
+                <td id="total"></td>
+            </tr>
+            </table>
+        </div>
         </div>
     </div>
-    
+
+    <script>
+        var TotalValue = 0;
+
+        var x = document.getElementsByClassName("sub");
+
+        for (var i = 0; i < x.length; i++) {
+        TotalValue += parseFloat(x[i].innerHTML);
+        }
+
+        document.getElementById("total").innerHTML =
+        TotalValue.toFixed(2) + " &euro;";
+    </script>
 </body>

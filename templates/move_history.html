@@ -9,6 +9,22 @@
         .column {
             width: 47%;
         }
+
+        #more-btn {
+            width: auto;
+            background-color: #3d9ae2;
+            color: white;
+            padding: 0px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 15px;
+            text-decoration: none;
+        }
+
+        #more-btn:hover {
+            background-color: #ff9811;
+        }
     </style>
 </head>
 
@@ -38,13 +54,15 @@
                         <th>Ημερομηνία Αποστολής</th>
                         <th>Πληροφορίες</th>
                         <th>Κατάσταση</th>
+                        <th>Περισσότερες πληροφορίες</th>
                     </tr>
-                    {% for (origin, origin_number, date, information, status) in transfer_from %}
+                    {% for (id, origin, origin_number, date, information, status) in transfer_from %}
                     <tr>
                         <td>{{ origin }} {{ origin_number }}</td>
                         <td>{{ date }}</td>
                         <td>{{ information }}</td>
                         <td>{{ status }}</td>
+                        <td><a href="/move_history/{{ id }}" id="more-btn">⮞   ⮞   ⮞</a></td>
                     </tr>
                     {% endfor %}
                 </table>
@@ -63,13 +81,15 @@
                         <th>Ημερομηνία Αποστολής</th>
                         <th>Πληροφορίες</th>
                         <th>Κατάσταση</th>
+                        <th>Περισσότερες πληροφορίες</th>
                     </tr>
-                    {% for (destination, dest_number, date, information, status) in transfer_to %}
+                    {% for (id, destination, dest_number, date, information, status) in transfer_to %}
                     <tr>
                         <td>{{ destination }} {{ dest_number }}</td>
                         <td>{{ date }}</td>
                         <td>{{ information }}</td>
                         <td>{{ status }}</td>
+                        <td><a href="/move_history/{{ id }}" id="more-btn">⮞   ⮞   ⮞</a></td>
                     </tr>
                     {% endfor %}
                 </table>

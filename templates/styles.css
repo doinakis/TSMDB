@@ -34,8 +34,8 @@ tr:nth-child(odd) {
 }
 
 .scroll_table {
-    display: block;
-    overflow: auto;
+    max-height: 500px;
+    overflow-y: scroll;
     margin-bottom: 30px;
 }
 
