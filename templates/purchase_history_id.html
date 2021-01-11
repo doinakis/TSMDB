@@ -9,9 +9,28 @@
         .column {
         width: 97%;
         }
+
         .sub {
         font-weight: bold;
         }
+
+        #back-btn {
+            float: left;
+            width: auto;
+            background-color: #ff5023;
+            color: white;
+            padding: 5px 10px;
+            margin-top: 30px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 20px;
+            text-decoration: none;
+        }
+
+        #back-btn:hover {
+            background-color: #ff9811;
+        }        
     </style>
 </head>
 
@@ -36,10 +55,11 @@
 
     <div class="column">
         <div class="row">
+        <a href="/purchase_history" id="back-btn">Πίσω</a>
         <h2>Αγορά που πραγματοποιήθηκε στις {{ date }}</h2>
         <h3>Από πελάτη: {{ client }} (τηλ. {{ client_phone_number }})</h3>
         <h3>Και εργαζόμενο: {{ employee }}</h3>
-        <br />
+        <br>
         <h3>Ανάλυση αγοράς:</h3>
 
         <div class="scroll_table">
