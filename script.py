@@ -20,6 +20,12 @@ def redirect_on_error(err_func):
 # SECTION: Constants
 # Flags if on HEROKU environment
 ON_HEROKU = 'IS_HEROKU' in os.environ
+
+# The store that is being demo'ed
+current_store_id = 5
+
+# Manager TIN
+manager_tin = '668975412'
 # !SECTION
 
 db = dbmanager.Database(host        = "tsmdbs.mysql.database.azure.com",
@@ -44,24 +50,38 @@ def on_error():
 @app.route('/', methods=[ 'GET' ])
 def get_index():
     """Redirects default page to login.html"""
-    current_store_id = 5
+    employee            = db.createObject(name="employee")
+    manager_info        = employee.query(cols=('first_name', 'last_name'),
+                                         condition=f"WHERE tin = {manager_tin}")[0]
+    manager_info        = f"{manager_info[0]} {manager_info[1]}"
+    
     store               = db.createObject(name="store")
-    results             = store.query(cols=("street_name", "street_number", "postal_code", "area"), condition="WHERE manager=668975412")[0]
+    results             = store.query(cols=("street_name", "street_number", "postal_code", "area"),
+                                      condition=f"WHERE manager={manager_tin}")[0]
     greek_keys          = ("Οδός", "Αριθμός", "Ταχ. Κώδικας", "Επιφάνεια (τμ)")
     store_info          = {k:v for k,v in zip(greek_keys,results)}
     move_to             = db.createObject(name="move_to")
     move_to_stores      = move_to.join(store,"move_to.destination=store.id")
     transfer_to         = move_to_stores.query(cols    = ("street_name", "street_number", "date", "info","status"),
-                                        condition = f"WHERE move_to.origin={current_store_id} AND (status = 'Accepted' or status = 'Pending') ORDER BY date DESC")
+                                        condition = f"""WHERE move_to.origin={current_store_id} AND (status = 'Accepted' or status = 'Pending') 
+                                                        HAVING DATEDIFF('{datetime.today().strftime('%Y-%m-%d')}', date) <= 7
+                                                        ORDER BY date DESC""")
     move_from_stores    = move_to.join(store,"move_to.origin=store.id")
     transfer_from       = move_from_stores.query(cols  = ("street_name", "street_number", "date", "info","status"),
-                                        condition = f"WHERE move_to.destination={current_store_id} AND (status = 'Accepted' or status = 'Pending') ORDER BY date DESC")
-    day_off          = db.createObject(name="`day-off`")
-    employee         = db.createObject(name="employee")
-    employee_day_off = day_off.join(employee,"`day-off`.employee_id=employee.tin")
-    store_day_off    = employee_day_off.query(cols=("first_name", "last_name", "phone_number", "type", "duration", "date"), condition=f"""WHERE store_id={current_store_id}
-                                                                                                                                           HAVING DATEDIFF(DATE_ADD(date,INTERVAL duration DAY), '{datetime.today().strftime('%Y-%m-%d')}') > 0""")
-    return render_template('index.html', store_info=store_info, transfer_to=transfer_to, transfer_from=transfer_from, store_day_off=store_day_off)
+                                        condition = f"""WHERE move_to.destination={current_store_id} AND (status = 'Accepted' or status = 'Pending')
+                                                        HAVING DATEDIFF('{datetime.today().strftime('%Y-%m-%d')}', date) <= 7
+                                                        ORDER BY date DESC""")
+    day_off             = db.createObject(name="`day-off`")
+    employee            = db.createObject(name="employee")
+    employee_day_off    = day_off.join(employee,"`day-off`.employee_id=employee.tin")
+    store_day_off       = employee_day_off.query(cols=("first_name", "last_name", "phone_number", "type", "duration", "date"),
+                                              condition=f"""WHERE store_id={current_store_id}
+                                                            HAVING DATEDIFF('{datetime.today().strftime('%Y-%m-%d')}', date) <= duration""")
+    return render_template('index.html', user_info=manager_info,
+                                         store_info=store_info,
+                                         transfer_to=transfer_to,
+                                         transfer_from=transfer_from,
+                                         store_day_off=store_day_off)
 
 @app.route('/images/<filename>', methods=[ 'GET' ])
 def get_image(filename):
@@ -76,28 +96,8 @@ def get_style():
     """Redirects styles.css to the default css file"""
     return send_file('templates/styles.css', mimetype='text/css')
 
-@app.route('/login', methods=[ 'GET' ])
-def get_login():
-    return render_template('login.html')
-
-@app.route('/login', methods=[ 'POST' ])
-def post_login():
-    error = None
-    if valid_login(request.form['username'], request.form['password']):
-        return redirect(url_for('get_index'))
-    else:
-        error = 'Invalid username/password'
-    return render_template('login.html', error=error)
-
-def valid_login(username, password):
-    if (username == 'Michalis') and (password == 'Doinakis'):
-        return True
-    else:
-        return False
-
 @app.route('/stock', methods=[ 'GET' ])
 def get_stock():
-    current_store_id = 5
     stock   = db.createObject(name="stock")
     product = db.createObject(name="product")
     store   = db.createObject(name="store")
@@ -117,7 +117,6 @@ def get_stock():
 
 @app.route('/stock/move', methods=[ 'POST' ])
 def post_stock():
-    current_store_id = 5
     checked_ids = tuple(request.form.keys())
     checked_ids = ','.join(checked_ids)
 
@@ -152,7 +151,6 @@ def post_stock():
 @app.route('/stock/move/complete', methods=[ 'POST' ])
 @redirect_on_error('on_error')
 def post_products_request():
-    current_store_id = 5
     info = dict(request.form)
 
     if 'description' in info:
@@ -185,8 +183,10 @@ def post_products_request():
     store   = db.createObject(name="store")
     product = db.createObject(name="product")
     move_to = db.createObject(name="move_to")
-    joined  = stock.join(store, on="stock.store_id=store.id").join(product, on="product.id=stock.product_id")
-    results = joined.query(cols=("store.id", "product.id", "amount"), condition=f"WHERE store.id IN ({ ','.join(map(str, info.keys())) })")
+    joined  = stock.join(store, on="stock.store_id=store.id")\
+                   .join(product, on="product.id=stock.product_id")
+    results = joined.query(cols=("store.id", "product.id", "amount"),
+                           condition=f"WHERE store.id IN ({ ','.join(map(str, info.keys())) })")
 
     try:
         for (sk, pk, actual_amount) in results:
@@ -215,8 +215,6 @@ def post_products_request():
 
 @app.route('/purchase_history', methods=[ 'GET' ])
 def get_history():
-    current_store_id = 5
-
     purchase_history = db.createObject("purchase_history")
     employee         = db.createObject("employee")
     client           = db.createObject("client")
@@ -240,7 +238,6 @@ def get_history():
 
 @app.route('/purchase_history/<id>', methods=[ 'GET' ])
 def get_history_id(id):
-    current_store_id = 5
     purchase_history = db.createObject("purchase_history")
     employee         = db.createObject("employee")
     client           = db.createObject("client")
@@ -277,7 +274,6 @@ def get_history_id(id):
 
 @app.route('/move_history', methods=[ 'GET' ])
 def get_move():
-    current_store_id = 5
     store = db.createObject("store")
     move_to          = db.createObject(name="move_to")
     move_to_stores   = move_to.join(store,"move_to.destination=store.id")
@@ -291,7 +287,6 @@ def get_move():
 
 @app.route('/move_history/<id>', methods=[ 'GET' ])
 def get_move_id(id):
-    current_store_id = 5
     move_to           = db.createObject("move_to")
     store_origin      = db.createObject("store AS origin")
     store_destination = db.createObject("store AS destination")
