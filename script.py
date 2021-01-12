@@ -230,8 +230,8 @@ def get_history():
                                            "employee.last_name",
                                            "client.first_name",
                                            "client.last_name",
-                                           "COUNT(product_id)",
-                                           "SUM(price)",
+                                           "SUM(amount)",
+                                           "SUM(price*amount)",
                                            "rating"),
                                     condition="GROUP BY purchase_history.product_list_id ORDER BY date DESC")
     return render_template('purchase_history.html', info=results)
