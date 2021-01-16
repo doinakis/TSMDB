@@ -35,8 +35,6 @@ db = dbmanager.Database(host        = "tsmdbs.mysql.database.azure.com",
                         charset     = 'utf8',
                         use_unicode = True)
 
-db.open()
-
 # Creating a flask app
 app = Flask(__name__, template_folder='templates')
 
@@ -329,6 +327,6 @@ if __name__ == '__main__':
     if port is None:
         raise EnvironmentError("Could not find port")
     
-    app.run(host=host, port=port)
-    db.close()
+    with db:
+        app.run(host=host, port=port)
 # !SECTION
